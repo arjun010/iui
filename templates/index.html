@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Title</title>
+    
+    <!--Vendor CSS files-->
+    <link href="../static/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/vendor/bootstrap-select.min.css" rel="stylesheet">
+    <link href="../static/css/vendor/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="../static/css/vendor/nv.d3.min.css" rel="stylesheet">
+    <link href="../static/css/vendor/d3.tip.css" rel="stylesheet">
+    <link href="../static/css/vendor/font-awesome.min.css" rel="stylesheet">    
+    <link href="../static/css/vendor/jquery-ui.min.css" rel="stylesheet">    
+    <link href="../static/css/vendor/pips-slider.css" rel="stylesheet">
+    <link href="../static/css/vendor/d3-context-menu.css" rel="stylesheet">
+    <!-- <link href="../static/css/vendor/bootstrap.min.css.map" rel="stylesheet"> -->
+    <!-- <link href="../static/css/vendor/bootstrap-select.css.map" rel="stylesheet"> -->
+    <!-- <link href="../static/css/vendor/bootstrap-theme.css.map" rel="stylesheet"> -->
+
+    <!--Custom CSS files-->
+    <link href="../static/css/style.css" rel="stylesheet">    
+    
+    <!--JS files-->
+    <script src="../static/js/vendor/jquery-2.1.4.min.js"></script>
+    <script src="../static/js/vendor/jquery-ui.min.js"></script>
+    <script src="../static/js/vendor/pips-slider.js"></script>
+    <script src="../static/js/vendor/bootstrap.min.js"></script>
+    <script src="../static/js/vendor/bootstrap-select.min.js"></script>
+    <script src="../static/js/vendor/d3.min.js"></script>
+    <script src="../static/js/vendor/d3.tip.js"></script>
+    <script src="../static/js/vendor/d3-context-menu.js"></script>
+    <script src="../static/js/vendor/google-charts.js"></script>
+
+    <script src="../static/js/otherSrc/DataProcessor.js"></script>
+    <script src="../static/js/otherSrc/ial.js"></script>
+    <!--<script src="../static/js/vendor/bootstrap-select.js.map"></script>-->
+</head>
+<body>
+    <div id='topPanel'>
+        <p style="font-size:20px;margin-left:15px;">Project Title</p>
+    </div>
+    <div id='mainbody'>
+        <div class="col-md-3" id='leftPanel'>
+            <br>
+            <div>
+                <i style="color: lightgrey;font-size: 15px;" class="fa fa-database"></i>
+                <select style="width: auto" id="dataFileSelector">
+                    <option value="cars">Cars</option>
+                    <option value="colleges">Universities</option>
+                    <option value="sales">Sales</option>
+                </select>
+            </div>
+            <br>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <p  align="center"><a data-toggle="collapse" data-parent="#accordion" href="#dataAttributeContainer">
+                    Data Attributes</a></p>
+                  </h4>
+                </div>
+                <div id="dataAttributeContainer" class="panel-collapse collapse">
+                  <div class="panel-body" id="dataAttributeContainerBody" style="font-size:10px">
+                        <div>
+                            <button id="sizeByItemScore">Re-size</button>
+                            <button id="groupByClusters">Re-group</button>
+                            <button id="colorByClusters">Re-color</button>
+                        </div>
+                        <hr>
+                        <span style="float: right;">
+                            <button title="Nullify attribute weights" id="nullifyAttributeWeightsButton"><span class="glyphicon glyphicon-trash"></span></button>
+                            <button title="Reset attribute weights" id="resetAttributeWeightsButton"><span class="glyphicon glyphicon-refresh"></span></button>
+                        </span>
+                        <br><br>
+                        <div id="dataAttributeWeightsDiv" style="padding-left: 2%;overflow-y: auto;height:200px;"></div>
+                  </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <p  align="center"><a data-toggle="collapse" data-parent="#accordion" href="#specialPointsContainer">
+                            Special data points</a></p>
+                    </h4>
+                </div>
+                <div id="specialPointsContainer" class="panel-collapse collapse">
+                    <div class="panel-body" id="specialPointsContainerBody" style="font-size:10px">
+                        <button id="adjustWeightsUsingDifferencesInLikedAndDislikedPointsButton" style="margin-left: 5%;" class="btn btn-default" title="Infer and apply attribute interest weights"><span class="fa fa-sliders"></span></button>
+                        <hr>
+                        <b>Points you like</b><button id="adjustWeightsUsingLikedPointsButton" style="margin-left: 5%;" class="btn btn-default" title="Infer and apply attribute interest weights"><span class="fa fa-sliders"></span></button>
+                        <div id="likedDataPoints" style="padding-top: 10px;">
+
+                        </div>
+                        <hr>
+                        <b>Points you dislike</b><button id="adjustWeightsUsingDislikedPointsButton" style="margin-left: 5%;" class="btn btn-default" title="Infer and apply attribute interest weights"><span class="fa fa-sliders"></span></button>
+                        <div id="dislikedDataPoints" style="padding-top: 10px;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <p  align="center"><a data-toggle="collapse" data-parent="#accordion" href="#dataAttributeContainer">
+                            Data Attributes</a></p>
+                    </h4>
+                </div>
+                <div id="dataAttributeContainer" class="panel-collapse collapse">
+                    <div class="panel-body" id="dataAttributeContainerBody" style="font-size:10px">
+                        <div>
+                            <button id="sizeByItemScore">Re-size</button>
+                            <button id="groupByClusters">Re-group</button>
+                            <button id="colorByClusters">Re-color</button>
+                        </div>
+                        <hr>
+                        <div id="dataAttributeWeightsDiv" style="padding-left: 2%;overflow-y: auto;height:200px;"></div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="col-md-9" id='mainContainer'>
+            <div style="padding-top: 10px" id="mainCanvasHeader">
+                <span id='leftPanelToggleButton' class="glyphicon glyphicon-remove-circle" style='float:left;font-size:20px;'></span>
+                <!-- <span id='rightPanelToggleButton' class="glyphicon glyphicon-remove-circle" style='float:right;font-size:20px;'></span> -->
+                <input style="margin-left: 10px" type="text" size="100">
+                <button type="button" class="btn btn-info">
+                    <span class="fa fa-microphone"></span>
+                </button>
+                <span style="float: right;">
+                    <button id="exploreViewButton"><span class="fa fa-braille"></span></button>
+                    <button id="dashboardViewButton"><span class="fa fa-bar-chart"></span></button>
+                    <button id="provenanceViewButton"><span class="fa fa-history"></span></button>
+                </span>
+                <div style="margin-left: 30px" >
+                    <input type="text" size="100">
+                </div>
+            </div>
+            <div id="mainCanvasBody">
+                <div id="exploreView">
+                    <div id="exploreVis"></div>
+                    <div id="exploreVisLegendDiv">
+                        <div id="clusterLegend"></div>
+                        <hr>
+                        <div id="colorLegend"></div>
+                    </div>
+                </div>
+                <div id="dashboardVis">
+                    <p>DASHBOARD</p>
+                </div>
+                <div id="provenanceView">
+                    <p>PROVENANCE</p>
+                </div>
+            </div>
+            <div id="mainCanvasViewOperationsContainer">
+                <span >Group by:</span> <select class="categoricalAttributesDropdown" id="groupDropdown"></select>
+                <span >Color by:</span> <select class="categoricalAttributesDropdown" id="colorDropdown"></select>
+                <span >Size by:</span> <select class="numericalAttributesDropdown" id="sizeDropdown"></select>
+            </div>
+            <div id="mainCanvasFooter">
+                <div id="detailsTableDiv"></div>
+                <div id="selectedDataOptions">
+                    <button id="adjustWeightsUsingSelectedPointsButton" style="margin-left: 5%;" class="btn btn-default" title="Infer and apply attribute interest weights"><span class="fa fa-sliders"></span></button>
+                    <button id="clearSelectedPointsButton" style="margin-left: 2%;" class="btn btn-default" title=""><span class="fa fa-refresh"></span></button>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-2" id='rightPanel'>         -->
+        <!-- </div> -->
+    </div>
+    <div class="loadingmodal"></div>
+</body>
+<script src="../static/js/global.js"></script>
+<script src="../static/js/utils.js"></script>
+<script src="../static/js/contextMenu.js"></script>
+<script src="../static/js/graph.js"></script>
+<script src="../static/js/ui.js"></script>
+<script src="../static/js/main.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#mainContainer").height($(window).height() - $("#topPanel").height());
+        $("#leftPanel").height($(window).height() - $("#topPanel").height());
+        $("#rightPanel").height($(window).height() - $("#topPanel").height());
+
+
+        var d = document.getElementById('exploreVisLegendDiv');
+        d.style.position = "absolute";
+        d.style.left = ($("body").width()*0.15)+'px';
+        d.style.top = 0+'px';
+
+        google.charts.load('current', {'packages':['table']});
+
+        main.init();
+    })
+</script>
+</html>

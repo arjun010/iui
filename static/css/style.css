@@ -1,0 +1,224 @@
+.loadingmodal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    url('http://i.stack.imgur.com/FhHRx.gif')
+    50% 50%
+    no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .loadingmodal {
+    display: block;
+}
+
+body {
+    overflow-y: auto;
+    /*background-color:#f1f4f9;*/
+}
+
+#leftPanel,#rightPanel{    
+    background-color:#38425d;
+    overflow-y: auto;
+}
+
+#topPanel{
+    background-color: #f2f2f2;
+    height: 30px;
+    top:0;
+    border: 1px solid;
+    border-color: gray;
+    position: relative;
+    /*width: 100%;*/
+}
+
+#mainbody{
+    height: 80%;
+    position: relative;
+}
+
+select{
+    /*border: 0px;*/
+    outline: 0px;
+    background-color: #fff;
+    font-family: 'News Cycle', 'Arial Narrow Bold', sans-serif;            
+    /*font-size: 12px;*/
+}
+
+.tooltip {
+    font-size: 9px;
+}
+
+#mainCanvasHeader {
+    position:relative;
+    width:100%;
+    height:11%;
+    /*background-color: gray;*/
+    border-bottom: 1px solid dimgray;
+}
+
+#mainCanvasBody {
+    position:relative;
+    width:100%;
+    height:71%;
+    /*background-color: #1b6d85;*/
+}
+
+#mainCanvasViewOperationsContainer {
+    position:relative;
+    width:100%;
+    height:3%;
+    /*background-color: greenyellow;*/
+}
+
+#mainCanvasFooter {
+    position:relative;
+    bottom:0;
+    width:100%;
+    height:15%;
+    /*background-color: #cccccc;*/
+    border-top: 1px solid dimgray;
+}
+
+#detailsTableDiv{
+    position: relative;
+    width: 90%;
+    height:100%;
+    float: left;
+}
+
+#selectedDataOptions{
+    position: relative;
+    width: 10%;
+    height:100%;
+    /*background-color: rebeccapurple;*/
+    float: right;
+}
+
+#exploreVisLegendDiv{
+    overflow-y: auto;
+    height: 200px;
+    width: 250px;
+    border: 1px solid black;
+    background-color: #FFFFFF;
+    opacity: 0.8;
+}
+
+.node{
+    stroke: black;
+    fill-opacity: 0.5;
+}
+
+.highlightedNode {
+    fill-opacity: 1;
+}
+
+.selectedNode {
+    fill-opacity: 1;
+}
+
+.fadedNode{
+    fill-opacity: 0.1;
+    stroke: none;
+}
+
+.likedNode {
+    stroke: blue;
+    stroke-dasharray: 10,5;
+    stroke-width: 3px;
+}
+
+.dislikedNode {
+    stroke: red;
+    stroke-dasharray: 10,5;
+    stroke-width: 3px;
+}
+
+.infobar {
+    fill: steelblue;
+    height:100%;
+}
+.infolabel{
+    font-size: 12px;
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 3px;
+}
+.infovalue{
+    font-size: 10px;
+    margin-left: 2px;
+    margin-top: 3px;
+}
+.inforow {
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    height: 18px;
+}
+
+.infolabelcolorbox{
+    /*margin-left: 10px;*/
+    margin-top: 2px;
+    /*height:80%;*/
+    height:12px;
+    width: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.infolabel.nocolorbox {
+    width: 90px;
+    margin-left: 0px;
+}
+
+
+.legendinfobar {
+    fill: steelblue;
+    height:100%;
+}
+.legendinfolabel{
+    font-size: 12px;
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 3px;
+}
+.legendinfovalue{
+    font-size: 10px;
+    margin-left: 2px;
+    margin-top: 3px;
+}
+.legendinforow {
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    height: 18px;
+}
+
+.legendinfolabelcolorbox{
+    /*margin-left: 10px;*/
+    margin-top: 2px;
+    /*height:80%;*/
+    height:12px;
+    width: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.legendinfolabel.nocolorbox {
+    width: 90px;
+    margin-left: 0px;
+}
