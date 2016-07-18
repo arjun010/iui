@@ -26,6 +26,7 @@ body.loading .loadingmodal {
 
 body {
     overflow-y: auto;
+    overflow-x: hidden;
     /*background-color:#f1f4f9;*/
 }
 

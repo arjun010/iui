@@ -196,7 +196,7 @@
 			.attr("height",18)
 			.call(d3.behavior.drag().on('drag', function(d) {
 				var newWidth = d.width + d3.event.dx;
-				if(newWidth<=maxBarWidth && newWidth>=minBarWidth){
+				if(newWidth<=maxBarWidth && newWidth>=minBarWidth && newWidth!=d.width){
 					d.width = newWidth;
 					d.value = parseFloat(Math.round(barWidthToAttributeWeightScale(newWidth)* 10000) / 10000).toFixed(2);
 					d3.select(this).attr('width',d.width);
@@ -211,6 +211,16 @@
                            })
                        }
                     });
+
+                    if($("#groupDropdown").val()=="userDefined"){
+                        $("#groupDropdown").val("").trigger("change");
+                    }
+                    if($("#colorDropdown").val()=="userDefined"){
+                        $("#colorDropdown").val("").trigger("change");
+                    }
+                    if($("#sizeDropdown").val()=="userDefined"){
+                        $("#sizeDropdown").val("").trigger("change");
+                    }
 
 				}
 			}));
