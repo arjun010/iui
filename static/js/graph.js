@@ -35,7 +35,6 @@
 
     var sizeScale;
 
-
     graphRenderer.clearGraph = function () {
         d3.select(visHTMLSelector).selectAll("svg").remove();
     };
@@ -231,37 +230,68 @@
         });
         force.start();
 
+        // globalVars.colorScale = color;
+
     };
 
     graphRenderer.colorPoints = function (coloringAttribute) {
         var colorCountMap = {};
         graphRenderer.dataList.forEach(function(d){
             if(coloringAttribute.indexOf("ial.")!=-1){
-                d.color = color(globalVars.ialIdToDataMap[d.ial.id]['ial'].KNNClusterId);
+                var clusterId = globalVars.ialIdToDataMap[d.ial.id]['ial'].KNNClusterId;
+                if(clusterId in colorCountMap){
+                    colorCountMap[clusterId] += 1;
+                }else{
+                    colorCountMap[clusterId] = 1;
+                }
+                d.color = color(clusterId);
             }else {
                 d.color = d[coloringAttribute]===undefined ? color("") : color(d[coloringAttribute]);
+                if(!(d[coloringAttribute]===undefined)){
+                    if(d[coloringAttribute] in colorCountMap){
+                        colorCountMap[d[coloringAttribute]] += 1;
+                    }else{
+                        colorCountMap[d[coloringAttribute]] = 1;
+                    }
+                }
             }
-           
-            // if(!(d[coloringAttribute]===undefined)){
-            //     if(d[coloringAttribute] in colorCountMap){
-            //         colorCountMap[d[coloringAttribute]] += 1;
-            //     }else{
-            //         colorCountMap[d[coloringAttribute]] = 1;
-            //     }
-            // }
+            /*
+            if(coloringAttribute.indexOf(".ial")!=-1){
+                var clusterId = globalVars.ialIdToDataMap[d.ial.id]['ial'].KNNClusterId;
+                console.log(clusterId)
+                if(clusterId in colorCountMap){
+                    colorCountMap[clusterId] += 1;
+                }else{
+                    colorCountMap[clusterId] = 1;
+                }
+            }else {
+                if(!(d[coloringAttribute]===undefined)){
+                    if(d[coloringAttribute] in colorCountMap){
+                        colorCountMap[d[coloringAttribute]] += 1;
+                    }else{
+                        colorCountMap[d[coloringAttribute]] = 1;
+                    }
+                }
+            }
+            */
         });
         
         svg.selectAll("circle").transition().duration(1000).style("fill", function(d) { return d.color; });
 
+        console.log(colorCountMap)
         // if(Object.keys(globalVars.dataAttributeMap).indexOf(coloringAttribute)!=-1){
-        //     var colorCountList = [];
-        //     for(var val in colorCountMap){
-        //         colorCountList.push({
-        //             "label":val,
-        //             "count":colorCountMap[val]
-        //         })
-        //     }
+            var colorCountList = [];
+            for(var val in colorCountMap){
+                colorCountList.push({
+                    "label":val,
+                    "count":colorCountMap[val]
+                })
+            }
         // }
+        
+        globalVars.colorList = utils.cloneObj(colorCountList);
+
+        globalVars.colorScale = color;
 
     };
 

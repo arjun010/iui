@@ -55,7 +55,7 @@
         var d = document.getElementById('exploreVisLegendDiv');
 		if(globalVars.leftPanelStatus==1){
 			$("#mainContainer").addClass('col-md-9');
-            d.style.left = ($("body").width()*0.15)+'px';
+            d.style.left = ($("body").width()*0.55)+'px';
 		}else if(globalVars.leftPanelStatus==0){
 			$("#mainContainer").addClass('col-md-12');
             d.style.left = ($("body").width()*0.80)+'px';
@@ -254,10 +254,17 @@
         main.applyUserDefinedAttributeWeightVector();
         var ialClusters = ial.createClusters();
         // globalVars.clusterList = utils.cloneObj(ialClusters);
-        console.log(ialClusters)
+
+        toggleLegendBox();
+
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.createClusters("ial.KNNClusterId","l-r-by-count");
-        uiHandler.updateClusterLegend("#clusterLegend",globalVars.clusterList)
+        uiHandler.updateClusterLegend(globalVars.clusterList)
+
+        if($("#groupDropdown").val()==$("#colorDropdown").val()){
+            uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
+            uiHandler.updateColorLegend([])
+        }
     });
 
     $("#colorByClusters").click(function(){
@@ -266,6 +273,16 @@
         var ialClusters = ial.createClusters();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.colorPoints("ial.KNNClusterId");
+
+        toggleLegendBox();
+
+        uiHandler.updateColorLegend(globalVars.colorList,globalVars.colorScale)
+
+        if($("#groupDropdown").val()==$("#colorDropdown").val()){
+            uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
+            uiHandler.updateColorLegend([])
+        }
+        toggleLegendBox();
     });
 
     $("#sizeByItemScore").click(function(){
@@ -278,20 +295,41 @@
 
     $("#groupDropdown").change(function () {
         var attribute = $("#groupDropdown").val();
+        toggleLegendBox();
+
         if(attribute=="userDefined"){
             $( "#groupByClusters" ).trigger( "click" );
         }else {
             graphRenderer.createClusters(attribute);
         }
-        uiHandler.updateClusterLegend("#clusterLegend",globalVars.clusterList)
+
+        if($("#groupDropdown").val()==$("#colorDropdown").val()){
+            uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
+            uiHandler.updateColorLegend([])
+        }else {
+            uiHandler.updateClusterLegend(globalVars.clusterList)
+            if($("#colorDropdown").val()!=""){
+                uiHandler.updateColorLegend(globalVars.colorList,globalVars.colorScale)
+            }
+        }
+
     });
 
     $("#colorDropdown").change(function () {
         var attribute = $("#colorDropdown").val();
+        toggleLegendBox();
+
         if(attribute=="userDefined"){
             $( "#colorByClusters" ).trigger( "click" );
         }else {
             graphRenderer.colorPoints(attribute);
+        }
+
+        if($("#groupDropdown").val()==$("#colorDropdown").val()){
+            uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
+            uiHandler.updateColorLegend([])
+        }else {
+            uiHandler.updateColorLegend(globalVars.colorList,globalVars.colorScale)
         }
     });
 
@@ -303,6 +341,23 @@
             graphRenderer.resizePoints(attribute);
         }
     });
+
+    function toggleLegendBox() {
+
+        if($("#groupDropdown").val()=="" && $("#colorDropdown").val()==""){
+            globalVars.showLegendBox = false;
+        }else {
+            globalVars.showLegendBox = true;
+        }
+
+        console.log(globalVars.showLegendBox)
+
+        if(globalVars.showLegendBox){
+            $("#exploreVisLegendDiv").show();
+        }else {
+            $("#exploreVisLegendDiv").hide();
+        }
+    }
 
 	uiHandler.updateDetailsTable = function (dataPoints) {
 
@@ -443,10 +498,20 @@
 		d3.selectAll(".node").classed("selectedNode",false)
 	});
 
-    uiHandler.updateClusterLegend = function (divId,data,colorScale) {
+    uiHandler.updateClusterLegend = function (data,colorScale) {
+        drawLegend("#clusterLegend",data,colorScale);
+    };
+
+    uiHandler.updateColorLegend = function (data,colorScale) {
+        console.log(data,colorScale)
+        drawLegend("#colorLegend",data,colorScale);
+    };
+    
+    function drawLegend(divId,data,colorScale) {
+        
         $(divId).html('');
         var dataMaxVal;
-        console.log(data)
+        
         if(data.length>0){
             dataMaxVal = -1;
             for(var i in data){
@@ -470,12 +535,16 @@
             .style("width","250px");
 
 
-        // row.append("div")
-        //     .attr("class","infolabelcolorbox")
-        //     .attr("flex","1")
-        //     .style("background-color", function (d) {
-        //         return 'gray';//colorScale(d.label);
-        //     });
+        row.append("div")
+            .attr("class","infolabelcolorbox")
+            .attr("flex","1")
+            .style("background-color", function (d) {
+                if(colorScale==undefined){
+                    return "none"
+                }else {
+                    return colorScale(d.label);
+                }
+            });
 
 
         var infolabelclass = 'legendinfolabel';
@@ -494,11 +563,18 @@
 
         row.append("div")
             .attr("class","legendinfovalue")
-            .text(function(d) { return d.count; });
+            .text(function(d) {
+                return d.count;
+            });
+
+        row.append("div")
+            .attr("class","legendinfoicon")
+            .attr("id",function (d) {
+                return "clusterIcon_"+d.label;
+            })
+            .html(function(d) {
+                return "<span class='fa fa-info-circle'></span>";
+            });
     }
-
-    uiHandler.updateColorLegend = function (colorList) {
-
-    };
 
 })();

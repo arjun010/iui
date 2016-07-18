@@ -207,6 +207,7 @@ select{
     justify-content: start;
     align-content: center;
     height: 18px;
+    margin-left: 2px;
 }
 
 .legendinfolabelcolorbox{
@@ -221,4 +222,7 @@ select{
 .legendinfolabel.nocolorbox {
     width: 90px;
     margin-left: 0px;
+}
+.legendinfoicon{
+    margin-left: 15px;
 }

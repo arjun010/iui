@@ -8,8 +8,12 @@
     });
 
     main.init = function(){
+
+        $("#exploreVisLegendDiv").hide();
         $("#dashboardVis").hide();
         $("#provenanceView").hide();
+
+
         var dataFile = "../static/data/"+$("#dataFileSelector").val()+".csv";
         initDataAndUpdateContainer(dataFile);
     };

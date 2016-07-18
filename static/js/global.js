@@ -16,5 +16,10 @@
 	globalVars.selectedPoints = [];
 	
 	globalVars.clusterList = [];
+    globalVars.colorList = [];
+    
+    globalVars.colorScale = undefined;
+    
+    globalVars.showLegendBox = false;
 	
 })();
