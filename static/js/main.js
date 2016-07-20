@@ -13,6 +13,8 @@
         $("#dashboardVis").hide();
         $("#provenanceView").hide();
 
+        $('#clusterDetailsModal').modal({ show: false});
+
 
         var dataFile = "../static/data/"+$("#dataFileSelector").val()+".csv";
         initDataAndUpdateContainer(dataFile);

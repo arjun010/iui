@@ -261,6 +261,9 @@
 
     $("#groupByClusters").click(function(){
         $("#groupDropdown").val("userDefined")
+
+        globalVars.clusteringAttribute = "userDefined";
+
         main.applyUserDefinedAttributeWeightVector();
         var ialClusters = ial.createClusters();
         // globalVars.clusterList = utils.cloneObj(ialClusters);
@@ -274,11 +277,19 @@
         if($("#groupDropdown").val()==$("#colorDropdown").val()){
             uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
             uiHandler.updateColorLegend([])
+        }else {
+            uiHandler.updateClusterLegend(globalVars.clusterList);
+            if($("#groupDropdown").val()==""){
+                uiHandler.updateClusterLegend([])
+            }
         }
     });
 
     $("#colorByClusters").click(function(){
-        $("#colorDropdown").val("userDefined")
+        $("#colorDropdown").val("userDefined");
+
+        globalVars.coloringAttribute = "userDefined";
+
         main.applyUserDefinedAttributeWeightVector();
         var ialClusters = ial.createClusters();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
@@ -286,17 +297,24 @@
 
         toggleLegendBox();
 
-        uiHandler.updateColorLegend(globalVars.colorList,globalVars.colorScale)
-
         if($("#groupDropdown").val()==$("#colorDropdown").val()){
             uiHandler.updateClusterLegend(globalVars.clusterList,globalVars.colorScale)
             uiHandler.updateColorLegend([])
+        }else {
+            uiHandler.updateColorLegend(globalVars.colorList,globalVars.colorScale)
+            if($("#groupDropdown").val()==""){
+                uiHandler.updateClusterLegend([])
+            }
         }
+
         toggleLegendBox();
     });
 
     $("#sizeByItemScore").click(function(){
         $("#sizeDropdown").val("userDefined")
+
+        globalVars.sizingAttribute = "userDefined";
+
         main.applyUserDefinedAttributeWeightVector();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.resizePoints("ial.itemScore");
@@ -305,6 +323,9 @@
 
     $("#groupDropdown").change(function () {
         var attribute = $("#groupDropdown").val();
+
+        globalVars.clusteringAttribute = attribute;
+
         toggleLegendBox();
 
         if(attribute=="userDefined"){
@@ -327,6 +348,9 @@
 
     $("#colorDropdown").change(function () {
         var attribute = $("#colorDropdown").val();
+
+        globalVars.coloringAttribute = attribute;
+
         toggleLegendBox();
 
         if(attribute=="userDefined"){
@@ -345,6 +369,9 @@
 
     $("#sizeDropdown").change(function () {
         var attribute = $("#sizeDropdown").val();
+
+        globalVars.sizingAttribute = attribute;
+
         if(attribute=="userDefined"){
             $( "#sizeByItemScore" ).trigger( "click" );
         }else {
@@ -509,15 +536,15 @@
 	});
 
     uiHandler.updateClusterLegend = function (data,colorScale) {
-        drawLegend("#clusterLegend",data,colorScale);
+        drawLegend("#clusterLegend",data,colorScale,'cluster');
     };
 
     uiHandler.updateColorLegend = function (data,colorScale) {
         console.log(data,colorScale)
-        drawLegend("#colorLegend",data,colorScale);
+        drawLegend("#colorLegend",data,colorScale,'color');
     };
     
-    function drawLegend(divId,data,colorScale) {
+    function drawLegend(divId,data,colorScale, legendType) {
         
         $(divId).html('');
         var dataMaxVal;
@@ -564,12 +591,23 @@
             .attr("class",infolabelclass)
             .attr("flex","1")
             .style("margin-left","5px")
-            .text(function(d) { return d.label; });
+            .text(function(d) { return d.label; })
+            .on("mouseover",function(d){
+                legendRowMouseoverHandler(d,legendType)
+            })
+            .on("mouseout",legendRowMouseoutHandler);
 
-        row.append("div")
+		row.append("svg")
+            .attr("width",80)
+            .append("rect")
             .attr("class","legendinfobar")
-            .style("background-color","steelblue")
-            .style("width", function(d) { return scale(d.count) + "px"; });
+            // .style("background-color","steelblue")
+            // .style("fill","steelblue")
+            .style("width", function(d) { return scale(d.count) + "px"; })
+            .on("mouseover",function(d){
+                legendRowMouseoverHandler(d,legendType)
+            })
+            .on("mouseout",legendRowMouseoutHandler);
 
         row.append("div")
             .attr("class","legendinfovalue")
@@ -577,14 +615,135 @@
                 return d.count;
             });
 
-        row.append("div")
-            .attr("class","legendinfoicon")
-            .attr("id",function (d) {
-                return "clusterIcon_"+d.label;
-            })
-            .html(function(d) {
-                return "<span class='fa fa-info-circle'></span>";
-            });
+        if(legendType=='cluster'){
+            row.append("div")
+                .attr("class","legendinfoicon")
+                .attr("id",function (d) {
+                    return "clusterIcon_"+d.label;
+                })
+                .html(function(d) {
+                    return "<span class='fa fa-info-circle'></span>";
+                })
+                .style("cursor","pointer")
+                .on("click",legendIconClickHandler);
+        }
+    }
+
+	function legendIconClickHandler(d) {
+
+        $('#clusterDetailsModal').modal('show');
+        $(".curClusterText").html(d.label);
+        $(".curClusterPointCount").html(d.points.length);
+
+        drawAttributeSummaryChartsForCluster(d.points);
+	}
+
+    function drawAttributeSummaryChartsForCluster(clusterPoints) {
+        $("#curClusterChartsContainer").html('');
+        var curAttributeVector = ial.getAttributeWeightVector();
+        for(var attribute in curAttributeVector){
+            if(attribute=="Name"){
+                continue;
+            }
+            var chartObj;
+            if(curAttributeVector[attribute]>0){
+                if(utils.isOnlyCategoricalAttribute(attribute)){
+                    chartObj = new VisObject("Bar");
+                    chartObj.setXAttr(attribute);
+                    chartObj.setYAttr(attribute);
+                    chartObj.setYTransform("COUNT");
+                }else if(utils.isCategoicalAndNumericAttribute(attribute)){
+                    chartObj = new VisObject("Bar");
+                    chartObj.setXAttr(attribute);
+                    chartObj.setYAttr(attribute);
+                    chartObj.setYTransform("COUNT");
+                }else if(utils.isOnlyNumericalAttribute(attribute)){
+                    chartObj = new VisObject("Histogram");
+                    chartObj.setXAttr(attribute);
+                }
+
+                var chartCardId = "clusterModalChartCard-" + attribute;
+                chartCardId = chartCardId.replace(/ /g,"")
+                var chartCardHTML = "<div class='clusterModalChartCard' id='"+chartCardId+"'></div>";
+                $("#curClusterChartsContainer").append(chartCardHTML);
+                // console.log(chartObj)
+                visRenderer.renderChart(clusterPoints,chartObj,"#"+chartCardId);
+            }
+        }
+    }
+
+    $('#clusterDetailsModal').on('hidden.bs.modal', function () {
+        $("#curClusterChartsContainer").html(''); // to clear svg elements when not in use
+    });
+
+    function legendRowMouseoverHandler(hoveredObj,hoverLegendType) {
+        d3.selectAll(".legendinforow").each(function (d) {
+            if(d==hoveredObj){
+                if(!d3.select(this).classed("hoveredLegendRow")){
+                    d3.select(this).classed("hoveredLegendRow",true)
+                }
+            }
+        });
+        d3.selectAll(".node").each(function (d) {
+            if(hoverLegendType=='color'){
+                if(globalVars.coloringAttribute=='userDefined'){
+                    var pointId = d.ial.id;
+                    var clusterId = globalVars.ialIdToDataMap[pointId].ial.KNNClusterId;
+                    if(clusterId == hoveredObj.label){
+                        if(!d3.select(this).classed('highlightedNode')){
+                            d3.select(this).classed('highlightedNode',true)
+                        }
+                    }else {
+                        if(!d3.select(this).classed('fadedNode')){
+                            d3.select(this).classed('fadedNode',true)
+                        }
+                    }
+                }else {
+                    var pointVal = d[globalVars.coloringAttribute];
+                    if(pointVal==hoveredObj.label){
+                        if(!d3.select(this).classed('highlightedNode')){
+                            d3.select(this).classed('highlightedNode',true)
+                        }
+                    }else {
+                        if(!d3.select(this).classed('fadedNode')){
+                            d3.select(this).classed('fadedNode',true)
+                        }
+                    }
+                }
+            }else if(hoverLegendType=='cluster'){
+                if(globalVars.clusteringAttribute=='userDefined'){
+                    var pointId = d.ial.id;
+                    var clusterId = globalVars.ialIdToDataMap[pointId].ial.KNNClusterId;
+                    console.log(clusterId,hoveredObj.label)
+                    if(clusterId == hoveredObj.label){
+                        if(!d3.select(this).classed('highlightedNode')){
+                            d3.select(this).classed('highlightedNode',true)
+                        }
+                    }else {
+                        if(!d3.select(this).classed('fadedNode')){
+                            d3.select(this).classed('fadedNode',true)
+                        }
+                    }
+                }else {
+                    var pointVal = d[globalVars.clusteringAttribute];
+                    if(pointVal==hoveredObj.label){
+                        if(!d3.select(this).classed('highlightedNode')){
+                            d3.select(this).classed('highlightedNode',true)
+                        }
+                    }else {
+                        if(!d3.select(this).classed('fadedNode')){
+                            d3.select(this).classed('fadedNode',true)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    function legendRowMouseoutHandler() {
+        d3.selectAll(".node").classed('highlightedNode',false);
+        d3.selectAll(".node").classed('fadedNode',false);
+        d3.selectAll(".legendinforow").classed("hoveredLegendRow",false);
     }
 
 })();

@@ -22,4 +22,8 @@
     
     globalVars.showLegendBox = false;
 	
+	globalVars.clusteringAttribute = undefined;
+    globalVars.coloringAttribute = undefined;
+    globalVars.sizingAttribute = undefined;
+	
 })();

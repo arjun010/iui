@@ -14,6 +14,13 @@
     <link href="../static/css/vendor/jquery-ui.min.css" rel="stylesheet">    
     <link href="../static/css/vendor/pips-slider.css" rel="stylesheet">
     <link href="../static/css/vendor/d3-context-menu.css" rel="stylesheet">
+
+    <!--<link href="../static/css/vendor/w3.css" rel="stylesheet">-->
+
+    <!--<link rel="stylesheet" href="../static/css/vendor/patternfly/css/patternfly.css" />-->
+    <!--<link rel="stylesheet" href="../static/css/vendor/patternfly/css/patternfly-additions.min.css" />-->
+    <!--<link rel="stylesheet" href="../static/css/vendor/patternfly/css/styles-additions.min.css" />-->
+
     <!-- <link href="../static/css/vendor/bootstrap.min.css.map" rel="stylesheet"> -->
     <!-- <link href="../static/css/vendor/bootstrap-select.css.map" rel="stylesheet"> -->
     <!-- <link href="../static/css/vendor/bootstrap-theme.css.map" rel="stylesheet"> -->
@@ -32,7 +39,12 @@
     <script src="../static/js/vendor/d3-context-menu.js"></script>
     <script src="../static/js/vendor/google-charts.js"></script>
 
+    <!--<script src="../static/js/vendor/patternfly/dist/js/patternfly.min.js"></script>-->
+
     <script src="../static/js/otherSrc/DataProcessor.js"></script>
+    <script src="../static/js/otherSrc/DataTransformer.js"></script>
+    <script src="../static/js/otherSrc/VisObject.js"></script>
+    <script src="../static/js/otherSrc/VisRenderer.js"></script>
     <script src="../static/js/otherSrc/ial.js"></script>
     <!--<script src="../static/js/vendor/bootstrap-select.js.map"></script>-->
 </head>
@@ -146,7 +158,7 @@
                     </div>
                 </div>
                 <div id="dashboardVis">
-                    <p>DASHBOARD</p>
+                    <p>ATTRIBUTE BASED VISUALIZATIONS</p>
                 </div>
                 <div id="provenanceView">
                     <p>PROVENANCE</p>
@@ -162,6 +174,7 @@
                 <div id="selectedDataOptions">
                     <button id="adjustWeightsUsingSelectedPointsButton" style="margin-left: 5%;" class="btn btn-default" title="Infer and apply attribute interest weights"><span class="fa fa-sliders"></span></button>
                     <button id="clearSelectedPointsButton" style="margin-left: 2%;" class="btn btn-default" title=""><span class="fa fa-refresh"></span></button>
+                    <!--<button data-toggle="modal" data-target="#clusterDetailsModal">modal test</button>-->
                 </div>
             </div>
         </div>
@@ -169,6 +182,27 @@
         <!-- </div> -->
     </div>
     <div class="loadingmodal"></div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="clusterDetailsModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="font-weight:normal">Details about cluster <b><span class="curClusterText"></span></b></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Number of points: <b><span class="curClusterPointCount"></span></b></p>
+                    <div id="curClusterChartsContainer"></div>
+                    <!--<div class="container-fluid container-cards-pf">-->
+                        <!--<div class="row row-cards-pf" id="curClusterCharts">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="../static/js/global.js"></script>
 <script src="../static/js/utils.js"></script>

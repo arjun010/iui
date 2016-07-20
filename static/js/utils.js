@@ -102,5 +102,26 @@
 			dataList.splice(itemIndex,1);
 		}
 	}
+	
+	utils.isOnlyCategoricalAttribute = function (attribute) {
+		if(globalVars.dataAttributeMap[attribute]['isCategorical']=='1' && globalVars.dataAttributeMap[attribute]['isNumeric']=='0'){
+			return true;
+		}	
+		return false;
+	};
+
+	utils.isOnlyNumericalAttribute = function (attribute) {
+		if(globalVars.dataAttributeMap[attribute]['isCategorical']=='0' && globalVars.dataAttributeMap[attribute]['isNumeric']=='1'){
+			return true;
+		}
+		return false;
+	};
+
+	utils.isCategoicalAndNumericAttribute = function (attribute) {
+		if(globalVars.dataAttributeMap[attribute]['isCategorical']=='1' && globalVars.dataAttributeMap[attribute]['isNumeric']=='1'){
+			return true;
+		}
+		return false;
+	};
 
 })();
