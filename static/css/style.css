@@ -130,10 +130,11 @@ select{
     fill-opacity: 1;
 }
 
-.fadedNode{
+.fadedNode, .filteredNode {
     fill-opacity: 0.1;
     stroke: none;
 }
+
 
 .likedNode {
     stroke: blue;

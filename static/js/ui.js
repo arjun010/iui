@@ -318,6 +318,33 @@
         main.applyUserDefinedAttributeWeightVector();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.resizePoints("ial.itemScore");
+
+        var minVal = undefined, maxVal = undefined;
+        for(var dataObj of globalVars.dataObjectList){
+            if(minVal==undefined){
+                minVal = dataObj.ial.itemScore;
+            }else {
+                if(minVal>dataObj.ial.itemScore){
+                    minVal = dataObj.ial.itemScore;
+                }
+            }
+            if(maxVal==undefined){
+                maxVal = dataObj.ial.itemScore;
+            }else {
+                if(maxVal<dataObj.ial.itemScore){
+                    maxVal = dataObj.ial.itemScore;
+                }
+            }
+        }
+        $("#numericalAttributeFilterSlider").show();
+        $("#numericalAttributeFilterSlider").slider({
+            min:minVal,max:maxVal,range: true, values: [minVal,maxVal],
+            slide: function(event, ui) {
+                filterBySizingAttributeValue(ui.values)
+            }
+        }).slider("pips",{rest: false}).slider("float");
+
+
     });
     
 
@@ -369,12 +396,52 @@
 
     $("#sizeDropdown").change(function () {
         var attribute = $("#sizeDropdown").val();
+        clearSizingAttributeFilter()
 
         globalVars.sizingAttribute = attribute;
 
         if(attribute=="userDefined"){
             $( "#sizeByItemScore" ).trigger( "click" );
+            var minVal = undefined, maxVal = undefined;
+            for(var dataObj of globalVars.dataObjectList){
+                if(minVal==undefined){
+                    minVal = dataObj.ial.itemScore;
+                }else {
+                    if(minVal>dataObj.ial.itemScore){
+                        minVal = dataObj.ial.itemScore;
+                    }
+                }
+                if(maxVal==undefined){
+                    maxVal = dataObj.ial.itemScore;
+                }else {
+                    if(maxVal<dataObj.ial.itemScore){
+                        maxVal = dataObj.ial.itemScore;
+                    }
+                }
+            }
+            $("#numericalAttributeFilterSlider").show();
+            $("#numericalAttributeFilterSlider").slider({
+                min:minVal,max:maxVal,range: true, values: [minVal,maxVal],
+                slide: function(event, ui) {
+                    filterBySizingAttributeValue(ui.values)
+                }
+            }).slider("pips",{rest: false}).slider("float");
+        }else if(attribute!=""){
+            graphRenderer.resizePoints(attribute);
+            $("#numericalAttributeFilterSlider").show();
+            // console.log(globalVars.dataAttributeMap, d3.min(globalVars.dataAttributeMap[attribute]['domain']))
+            var minVal = d3.min(globalVars.dataAttributeMap[attribute]['domain']);
+            var maxVal = d3.max(globalVars.dataAttributeMap[attribute]['domain']);
+            // $("#numericalAttributeFilterSlider").slider({min:minVal,max:maxVal}).slider("pips",{rest: false}).slider("float");
+            $("#numericalAttributeFilterSlider").slider({
+                min:minVal,max:maxVal,range: true, values: [minVal,maxVal],
+                slide: function(event, ui) {
+                    filterBySizingAttributeValue(ui.values)
+                }
+            }).slider("pips",{rest: false}).slider("float");
         }else {
+            $("#numericalAttributeFilterSlider").hide();
+            // clearSizingAttributeFilter();
             graphRenderer.resizePoints(attribute);
         }
     });
@@ -503,12 +570,30 @@
 
 	$("#nullifyAttributeWeightsButton").click(function (elm) {
 		ial.nullifyAttributeWeightVector();
-		adjustSliderWeights(ial.getAttributeWeightVector());
+        adjustSliderWeights(ial.getAttributeWeightVector());
+        if($("#groupDropdown").val()=="userDefined"){
+            $("#groupDropdown").val("").trigger("change");
+        }
+        if($("#colorDropdown").val()=="userDefined"){
+            $("#colorDropdown").val("").trigger("change");
+        }
+        if($("#sizeDropdown").val()=="userDefined"){
+            $("#sizeDropdown").val("").trigger("change");
+        }
 	});
 
 	$("#resetAttributeWeightsButton").click(function (ev) {
 		ial.resetAttributeWeightVector();
 		adjustSliderWeights(ial.getAttributeWeightVector());
+        if($("#groupDropdown").val()=="userDefined"){
+            $("#groupDropdown").val("").trigger("change");
+        }
+        if($("#colorDropdown").val()=="userDefined"){
+            $("#colorDropdown").val("").trigger("change");
+        }
+        if($("#sizeDropdown").val()=="userDefined"){
+            $("#sizeDropdown").val("").trigger("change");
+        }
 	});
 	
 	$("#dashboardViewButton").click(function (ev) {
@@ -744,6 +829,31 @@
         d3.selectAll(".node").classed('highlightedNode',false);
         d3.selectAll(".node").classed('fadedNode',false);
         d3.selectAll(".legendinforow").classed("hoveredLegendRow",false);
+    }
+
+    function filterBySizingAttributeValue(valueRange) {
+        var minVal = valueRange[0];
+        var maxVal = valueRange[1];
+        d3.selectAll('.node').each(function (d) {
+            if(globalVars.sizingAttribute=="userDefined"){
+                var dataPointVal = d.ial.itemScore;
+            }else {
+                var dataPointVal = d[globalVars.sizingAttribute];
+            }
+            if(dataPointVal<minVal || dataPointVal>maxVal){
+                if(!d3.select(this).classed('filteredNode')){
+                    d3.select(this).classed('filteredNode',true);
+                }
+            }else {
+                if(d3.select(this).classed('filteredNode')){
+                    d3.select(this).classed('filteredNode',false);
+                }
+            }
+        })
+    }
+
+    function clearSizingAttributeFilter() {
+        d3.selectAll('.node').classed('filteredNode',false);
     }
 
 })();

@@ -14,6 +14,8 @@
         $("#provenanceView").hide();
 
         $('#clusterDetailsModal').modal({ show: false});
+        
+        $("#numericalAttributeFilterSlider").hide();
 
 
         var dataFile = "../static/data/"+$("#dataFileSelector").val()+".csv";
