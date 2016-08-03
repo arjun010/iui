@@ -119,7 +119,17 @@
                     }else{
                         d3.select(this).classed("selectedNode",true);
                         globalVars.selectedPoints.push(d);
-                    }
+
+                        if(globalVars.selectedPoints.length % globalVars.dataPointsSelectionThreshold == 0){
+                            var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.selectedPoints);
+                            console.log(brainOpt)
+                            if(brainOpt.canSuggest){
+                                var suggestion = new Suggestion('AttributeWeightVector');
+                                suggestionManager.addSuggestion(suggestion);
+                                $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
+                            }
+                        }
+                    };
                     timer = setTimeout(function() {
                         console.log("single click");
                         mouseclickHandler(d);

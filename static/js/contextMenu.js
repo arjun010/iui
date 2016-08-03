@@ -7,12 +7,40 @@
             title: 'Like',
             action: function(elm, d, i) {
                 addPointToLikedList(d,elm);
+                var specialPointsCount = globalVars.likedPoints.length + globalVars.dislikedPoints.length;
+                if(specialPointsCount % globalVars.specialPointsSelectionThreshold == 0){
+                    if(globalVars.dislikedPoints.length>0){
+                        var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.likedPoints,globalVars.dislikedPoints);
+                    }else {
+                        var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.likedPoints);    
+                    }
+                    console.log(brainOpt)
+                    if(brainOpt.canSuggest){
+                        var suggestion = new Suggestion('AttributeWeightVector');
+                        suggestionManager.addSuggestion(suggestion);
+                        $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
+                    }
+                }
             }
         },
         {
             title: 'Dislike',
             action: function(elm, d, i) {
                 addPointToDislikedList(d,elm);
+                var specialPointsCount = globalVars.likedPoints.length + globalVars.dislikedPoints.length;
+                if(specialPointsCount % globalVars.specialPointsSelectionThreshold == 0){
+                    if(globalVars.likedPoints.length>0){
+                        var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.likedPoints,globalVars.dislikedPoints);
+                    }else {
+                        var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.dislikedPoints,[],true);
+                    }
+                    console.log(brainOpt)
+                    if(brainOpt.canSuggest){
+                        var suggestion = new Suggestion('AttributeWeightVector');
+                        suggestionManager.addSuggestion(suggestion);
+                        $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
+                    }
+                }
             }
         }
     ];

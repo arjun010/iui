@@ -571,7 +571,7 @@
 	$("#nullifyAttributeWeightsButton").click(function (elm) {
 		ial.nullifyAttributeWeightVector();
         adjustSliderWeights(ial.getAttributeWeightVector());
-        if($("#groupDropdown").val()=="userDefined"){
+		if($("#groupDropdown").val()=="userDefined"){
             $("#groupDropdown").val("").trigger("change");
         }
         if($("#colorDropdown").val()=="userDefined"){
@@ -585,7 +585,7 @@
 	$("#resetAttributeWeightsButton").click(function (ev) {
 		ial.resetAttributeWeightVector();
 		adjustSliderWeights(ial.getAttributeWeightVector());
-        if($("#groupDropdown").val()=="userDefined"){
+		if($("#groupDropdown").val()=="userDefined"){
             $("#groupDropdown").val("").trigger("change");
         }
         if($("#colorDropdown").val()=="userDefined"){

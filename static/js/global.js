@@ -26,4 +26,11 @@
     globalVars.coloringAttribute = undefined;
     globalVars.sizingAttribute = undefined;
 	
+	globalVars.suggestions = [];
+
+    globalVars.dataPointsSelectionThreshold = 5;
+    globalVars.specialPointsSelectionThreshold = 5;
+    
+    globalVars.weightVectorSumDiffChange = 0.5;
+	
 })();

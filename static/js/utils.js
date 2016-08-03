@@ -123,5 +123,21 @@
 		}
 		return false;
 	};
+	
+	utils.getSumOfMapValues = function (inputMap) {
+		var sum = 0.0;
+		for(var key in inputMap){
+			sum += parseFloat(inputMap[key]);
+		}	
+		return sum;
+	};
+    
+    utils.getInverseMap = function (inputMap,maxValForKey) {
+        var newMap = {};
+        for(var key in inputMap){
+            newMap[key] = maxValForKey - inputMap[key];
+        }
+        return newMap;
+    }
 
 })();
