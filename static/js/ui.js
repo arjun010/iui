@@ -223,7 +223,14 @@
                     }
 
 				}
-			}));
+			}).on('dragend',function () {
+                    var newWeightVector = {};
+                    d3.selectAll('.infobar').each(function (d) {
+                        newWeightVector[d.label] = parseFloat(d.value)
+                    });
+                    ial.setAttributeWeightVector(newWeightVector)
+                })
+            );
 
 		row.append("div")
 			.attr("class","infovalue")
@@ -256,7 +263,7 @@
 	}
 
 	$("#applyAttributeWeightsButton").click(function(){
-        main.applyUserDefinedAttributeWeightVector();
+        // main.applyUserDefinedAttributeWeightVector();
 	});
 
     $("#groupByClusters").click(function(){
@@ -264,7 +271,7 @@
 
         globalVars.clusteringAttribute = "userDefined";
 
-        main.applyUserDefinedAttributeWeightVector();
+        // main.applyUserDefinedAttributeWeightVector();
         var ialClusters = ial.createClusters();
         // globalVars.clusterList = utils.cloneObj(ialClusters);
 
@@ -290,7 +297,7 @@
 
         globalVars.coloringAttribute = "userDefined";
 
-        main.applyUserDefinedAttributeWeightVector();
+        // main.applyUserDefinedAttributeWeightVector();
         var ialClusters = ial.createClusters();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.colorPoints("ial.KNNClusterId");
@@ -315,7 +322,7 @@
 
         globalVars.sizingAttribute = "userDefined";
 
-        main.applyUserDefinedAttributeWeightVector();
+        // main.applyUserDefinedAttributeWeightVector();
         globalVars.ialIdToDataMap = ial.getIalIdToDataMap();
         graphRenderer.resizePoints("ial.itemScore");
 
@@ -625,7 +632,7 @@
     };
 
     uiHandler.updateColorLegend = function (data,colorScale) {
-        console.log(data,colorScale)
+        // console.log(data,colorScale)
         drawLegend("#colorLegend",data,colorScale,'color');
     };
     
@@ -721,6 +728,68 @@
         $(".curClusterPointCount").html(d.points.length);
 
         drawAttributeSummaryChartsForCluster(d.points);
+
+        var clusterPoints = d.points;
+
+        $("#selectAllPointsInCluster").click(function () {
+            for(var clusterPoint of clusterPoints){
+                d3.selectAll('.node').each(function (curNode) {
+                    if(clusterPoint.ial.id == curNode.ial.id){
+                        if(utils.objectInList(curNode,globalVars.selectedPoints)==false){
+                            if(!d3.select(this).classed('selectedNode')){
+                                d3.select(this).classed('selectedNode',true);
+                            }
+                            globalVars.selectedPoints.push(curNode);
+                        }
+                    }
+                })
+            }
+            uiHandler.updateDetailsTable(globalVars.selectedPoints);
+            var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.selectedPoints);
+            // console.log(brainOpt)
+            if(brainOpt.canSuggest){
+                var suggestion = new Suggestion('AttributeWeightVector');
+                suggestionManager.addSuggestion(suggestion);
+                $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
+            }
+        });
+
+        $("#likeAllPointsInCluster").click(function () {
+            for(var clusterPoint of clusterPoints){
+                d3.selectAll('.node').each(function (curNode) {
+                    if(clusterPoint.ial.id == curNode.ial.id){
+                        addPointToLikedList(curNode,this)
+                        // if(utils.objectInList(curNode,globalVars.likedPoints)==false){
+                        //     if(!d3.select(this).classed('likedNode')){
+                        //         d3.select(this).classed('likedNode',true);
+                        //     }
+                        //     globalVars.likedPoints.push(curNode);
+                        // }
+                    }
+                })
+            }
+            checkForAttributeVectorSuggestionUsingSpecialPoints();
+            computeAndSuggestNewDataPoint();
+        });
+
+        $("#dislikeAllPointsInCluster").click(function () {
+            for(var clusterPoint of clusterPoints){
+                d3.selectAll('.node').each(function (curNode) {
+                    if(clusterPoint.ial.id == curNode.ial.id){
+                        addPointToDislikedList(curNode,this)
+                        // if(utils.objectInList(curNode,globalVars.dislikedPoints)==false){
+                        //     if(!d3.select(this).classed('dislikedNode')){
+                        //         d3.select(this).classed('dislikedNode',true);
+                        //     }
+                        //     globalVars.dislikedPoints.push(curNode);
+                        // }
+                    }
+                })
+            }
+            checkForAttributeVectorSuggestionUsingSpecialPoints();
+            computeAndSuggestNewDataPoint();
+        });
+
 	}
 
     function drawAttributeSummaryChartsForCluster(clusterPoints) {
@@ -855,5 +924,9 @@
     function clearSizingAttributeFilter() {
         d3.selectAll('.node').classed('filteredNode',false);
     }
+
+    $("#printWeightVectorButton").click(function (elm) {
+        console.log(ial.getAttributeWeightVector())
+    });
 
 })();

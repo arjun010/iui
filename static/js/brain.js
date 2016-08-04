@@ -39,5 +39,34 @@
         }
         
     };
+
+    brain.getNewDataPointSuggestion = function (likedDataPoints,dislikedDataPoints) {
+        var interestWeightVector = ial.generateAttributeWeightVectorUsingDifferences(likedDataPoints,dislikedDataPoints);
+        
+        var suggestedPoint = undefined, maxScore = 0.0;
+        for(var d of globalVars.dataObjectList){
+            var curPointScore = parseFloat(getItemScore(d,interestWeightVector));
+            if(curPointScore>maxScore && utils.objectInList(d,likedDataPoints)==false){
+                maxScore = curPointScore;
+                suggestedPoint = d;
+            }
+        }
+        
+        return suggestedPoint;
+        
+    };
+
+    function getItemScore(d,attributeVector){
+        var score = 0.0;
+        for(var attribute in attributeVector){
+            if(attributeVector[attribute]>0.0 && !isNaN(d[attribute])){
+                var attributeVal = ial.getNormalizedAttributeValue(d[attribute],attribute);
+                attributeVal *= attributeVector[attribute];
+                score += attributeVal;
+            }
+        }
+        score = parseFloat(Math.round(score* 10000) / 10000).toFixed(4);
+        return score;
+    }
     
 })();

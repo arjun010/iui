@@ -21,10 +21,12 @@
 })();
 
 
-// type: AttributeWeightVector, 
+// type: AttributeWeightVector, DataPoint
 var Suggestion = function (type) {
     this.type = type;
     this.timeStamp = new Date();
     this.description = "";
     this.seen = false;
+    this.suggestedValue = undefined;
+    this.existingValue = undefined;
 };

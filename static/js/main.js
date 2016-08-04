@@ -92,4 +92,54 @@
         ial.setAttributeWeightVector(userDefinedAttributeWeightVector);
     };
 
+    checkForAttributeVectorSuggestionUsingSpecialPoints = function () {
+        if(globalVars.likedPoints.length>0 && globalVars.dislikedPoints.length>0){
+            var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.likedPoints,globalVars.dislikedPoints);
+        }else if(globalVars.likedPoints.length>0 && globalVars.dislikedPoints.length==0){
+            var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.likedPoints);
+        }else if(globalVars.likedPoints.length==0 && globalVars.dislikedPoints.length>0){
+            var brainOpt = brain.canSuggestAttributeWeightVector(globalVars.dislikedPoints,[],true);
+        }else{
+            return;
+        }
+        
+        console.log(brainOpt);
+        if(brainOpt.canSuggest){
+            var suggestion = new Suggestion('AttributeWeightVector');
+            suggestionManager.addSuggestion(suggestion);
+            $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
+        }
+    };
+    
+    computeAndSuggestNewDataPoint = function () {
+        $("#suggestedPointOfInterest").html('');
+        if(globalVars.likedPoints.length==0){
+            return;
+        }
+
+        var suggestedDataPoint = brain.getNewDataPointSuggestion(globalVars.likedPoints,globalVars.dislikedPoints);
+
+        $("#suggestedPointOfInterest").append("<div class='suggestedDataPoint'>Possible point of interest: " + suggestedDataPoint.Name + "</div>");
+
+        $(".suggestedDataPoint").mouseover(function (elm) {
+
+            d3.selectAll('.node').each(function (d) {
+                if(d.ial.id == suggestedDataPoint.ial.id){
+                    if(!d3.select(this).classed('highlightedNode')){
+                        d3.select(this).classed('highlightedNode',true)
+                    }
+                }else{
+                    if(!d3.select(this).classed('fadedNode')){
+                        d3.select(this).classed('fadedNode',true)
+                    }
+                }
+            })
+
+        });
+
+        $(".suggestedDataPoint").mouseout(function (elm) {
+            d3.selectAll('.node').classed("highlightedNode",false).classed("fadedNode",false)
+        });
+    }
+
 })();

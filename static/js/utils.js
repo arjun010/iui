@@ -101,7 +101,22 @@
 		if(itemIndex!=-1){
 			dataList.splice(itemIndex,1);
 		}
-	}
+	};
+    
+    
+    utils.removeFromListUsingIalId = function (ialId, dataList) {
+        var itemIndex = -1;
+        for(var i in dataList){
+            var dataObj = dataList[i];
+            if(dataObj.ial.id==ialId){
+                itemIndex = i;
+                break;
+            }
+        }
+        if(itemIndex!=-1){
+            dataList.splice(itemIndex,1);
+        }
+    };
 	
 	utils.isOnlyCategoricalAttribute = function (attribute) {
 		if(globalVars.dataAttributeMap[attribute]['isCategorical']=='1' && globalVars.dataAttributeMap[attribute]['isNumeric']=='0'){
@@ -139,5 +154,6 @@
         }
         return newMap;
     }
+    
 
 })();

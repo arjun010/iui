@@ -53,7 +53,7 @@
         <span style="font-size:20px;margin-left:15px;">Project Title</span>
 
         <!--<button type="button" class="btn btn-danger" style="height: 50%;"> -->
-            <span style="float: right;margin-top: 5px;margin-right: 5px;" class="badge newSuggestionsCount">0</span>
+            <span style="float: right;margin-top: 5px;margin-right: 5px;background-color: #e31b00" class="badge newSuggestionsCount">0</span>
         <!--</button>-->
     </div>
     <div id='mainbody'>
@@ -81,6 +81,7 @@
                             <button id="sizeByItemScore">Re-size</button>
                             <button id="groupByClusters">Re-group</button>
                             <button id="colorByClusters">Re-color</button>
+                            <button id="printWeightVectorButton">Print weight vector (DEV ONLY)</button>
                         </div>
                         <hr>
                         <span style="float: right;">
@@ -92,6 +93,7 @@
                   </div>
                 </div>
             </div>
+            <div style="color:white" id="suggestedPointOfInterest"></div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -195,7 +197,7 @@
                     <h4 class="modal-title" style="font-weight:normal">Details about cluster <b><span class="curClusterText"></span></b></h4>
                 </div>
                 <div class="modal-body">
-                    <p>Number of points: <b><span class="curClusterPointCount"></span></b></p>
+                    <div>Number of points: <b><span class="curClusterPointCount"></span></b> <button id="selectAllPointsInCluster">Select</button><button id="likeAllPointsInCluster">Like</button><button id="dislikeAllPointsInCluster">Dislike</button></div>
                     <div id="curClusterChartsContainer"></div>
                     <!--<div class="container-fluid container-cards-pf">-->
                         <!--<div class="row row-cards-pf" id="curClusterCharts">-->
