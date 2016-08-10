@@ -118,7 +118,7 @@
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            // .call(histogramTooltip);
+            .call(histogramTooltip);
 
         var bar = svg.selectAll(".bar")
             .data(data)
@@ -131,8 +131,8 @@
             .attr("width", x(data[0].dx) - 1)
             .attr("height", function(d) { return height - y(d.y); })
             .attr("fill","steelblue")
-            // .on('mouseover', histogramTooltip.show)
-            // .on('mouseout', histogramTooltip.hide);
+            .on('mouseover', histogramTooltip.show)
+            .on('mouseout', histogramTooltip.hide);
 
         bar.append("text")
             .attr("dy", ".75em")
@@ -205,7 +205,7 @@
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            // .call(barTooltip);
+            .call(barTooltip);
 
         x.domain(data.map(function(d) { return d.label; }));
         y.domain([0, d3.max(data, function(d) { return d.value; })]);
@@ -243,8 +243,8 @@
             .attr("y", function(d) { return y(d.value); })
             .attr("height", function(d) { return height - y(d.value); })
             .attr("fill","steelblue")
-            // .on('mouseover', barTooltip.show)
-            // .on('mouseout', barTooltip.hide);
+            .on('mouseover', barTooltip.show)
+            .on('mouseout', barTooltip.hide);
 
         // console.log(tickFontSize)
         // axes styling

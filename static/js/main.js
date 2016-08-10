@@ -107,6 +107,8 @@
         if(brainOpt.canSuggest){
             var suggestion = new Suggestion('AttributeWeightVector');
             suggestionManager.addSuggestion(suggestion);
+            suggestion.setExistingValue(ial.getAttributeWeightVector());
+            suggestion.setSuggestedValue(brainOpt.suggestedVector);
             $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
         }
     };

@@ -750,6 +750,8 @@
             if(brainOpt.canSuggest){
                 var suggestion = new Suggestion('AttributeWeightVector');
                 suggestionManager.addSuggestion(suggestion);
+				suggestion.setExistingValue(ial.getAttributeWeightVector());
+				suggestion.setSuggestedValue(brainOpt.suggestedVector);
                 $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
             }
         });
@@ -928,5 +930,49 @@
     $("#printWeightVectorButton").click(function (elm) {
         console.log(ial.getAttributeWeightVector())
     });
+
+	$("#suggestsionsBadge").click(function (elm) {
+		showSuggestionsModal();
+	});
+
+	function showSuggestionsModal() {
+		$("#suggestionsModal").modal('show');
+		// var suggestionList = utils.cloneObj(globalVars.suggestions);
+		// suggestionList.reverse();
+		// console.log(globalVars.suggestions,suggestionList);
+		// d3.select("#suggestionListDiv").selectAll("svg").remove();
+
+		var mainSuggestionDiv = d3.select("#suggestionListDiv");
+
+		var suggestionDivs = mainSuggestionDiv.selectAll(".suggestion")
+								.data(globalVars.suggestions)
+								.enter()
+								.append("div")
+								.text(function (d) {
+									return d.type;
+								})
+								.attr("class",function (d) {
+									if(d.seen){
+										return "suggestion seen"
+									}else {
+										return "suggestion"
+									}
+								})
+								.on("click",function (d) {
+									if(!d.seen){
+										d.seen = true;
+										d3.select(this).classed("seen",true);
+									}
+								});
+
+		suggestionDivs.append("span")
+			.text(function (d) {
+				return d.timeStamp
+			})
+			.style("float","right");
+
+		suggestionDivs.append("hr");
+
+	}
 
 })();

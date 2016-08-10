@@ -65,7 +65,7 @@ select{
 #mainCanvasHeader {
     position:relative;
     width:100%;
-    height:11%;
+    height:6%;
     /*background-color: gray;*/
     border-bottom: 1px solid dimgray;
 }
@@ -250,4 +250,12 @@ select{
 .hoveredLegendRow{
     fill-opacity: 1;
     font-weight: bold;
+}
+
+.suggestion{
+    background-color: #ededed;
+}
+
+.suggestion.seen{
+    background-color: #FFFFFF;
 }

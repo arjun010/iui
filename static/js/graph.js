@@ -125,6 +125,8 @@
                             console.log(brainOpt)
                             if(brainOpt.canSuggest){
                                 var suggestion = new Suggestion('AttributeWeightVector');
+                                suggestion.setExistingValue(ial.getAttributeWeightVector());
+                                suggestion.setSuggestedValue(brainOpt.suggestedVector);
                                 suggestionManager.addSuggestion(suggestion);
                                 $(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount())
                             }

@@ -46,7 +46,7 @@
         var suggestedPoint = undefined, maxScore = 0.0;
         for(var d of globalVars.dataObjectList){
             var curPointScore = parseFloat(getItemScore(d,interestWeightVector));
-            if(curPointScore>maxScore && utils.objectInList(d,likedDataPoints)==false){
+            if(curPointScore>maxScore && utils.objectInList(d,likedDataPoints)==false && utils.objectInList(d,dislikedDataPoints)==false){
                 maxScore = curPointScore;
                 suggestedPoint = d;
             }

@@ -5,7 +5,7 @@
     suggestionManager = {};
     
     suggestionManager.addSuggestion = function (suggestion) {
-        globalVars.suggestions.push(suggestion);
+        globalVars.suggestions.unshift(suggestion); // pushes to the start of the list
     };
     
     suggestionManager.getUnseenSuggestionsCount = function () {
@@ -16,7 +16,7 @@
             }
         }
         return unseenSuggestionsCount;
-    }
+    };
     
 })();
 
@@ -29,4 +29,12 @@ var Suggestion = function (type) {
     this.seen = false;
     this.suggestedValue = undefined;
     this.existingValue = undefined;
+};
+
+Suggestion.prototype.setExistingValue = function (value) {
+    this.existingValue = utils.cloneObj(value);
+};
+
+Suggestion.prototype.setSuggestedValue = function (value) {
+    this.suggestedValue = utils.cloneObj(value);  
 };
