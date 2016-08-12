@@ -31,6 +31,6 @@
     globalVars.dataPointsSelectionThreshold = 5;
     globalVars.specialPointsSelectionThreshold = 5;
     
-    globalVars.weightVectorSumDiffChange = 0.5;
+    globalVars.weightVectorSumDiffChange = 0.4;
 	
 })();

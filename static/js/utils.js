@@ -153,7 +153,20 @@
             newMap[key] = maxValForKey - inputMap[key];
         }
         return newMap;
-    }
-    
+    };
+
+	utils.getSortedKeysForMap = function(obj, order) {
+		if(order == undefined){
+			order = 'd';
+		}
+		var keys = []; for(var key in obj) keys.push(key);
+		return keys.sort(function(a,b){
+			if(order == 'd'){
+				return obj[b]-obj[a]
+			}else {
+				return obj[a]-obj[b]
+			}
+		});
+	};
 
 })();

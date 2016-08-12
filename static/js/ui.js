@@ -937,11 +937,9 @@
 
 	function showSuggestionsModal() {
 		$("#suggestionsModal").modal('show');
-		// var suggestionList = utils.cloneObj(globalVars.suggestions);
-		// suggestionList.reverse();
-		// console.log(globalVars.suggestions,suggestionList);
-		// d3.select("#suggestionListDiv").selectAll("svg").remove();
+		$("#attributeWeightVectorComparisonDiv").hide();
 
+		$("#suggestionListDiv").html('');
 		var mainSuggestionDiv = d3.select("#suggestionListDiv");
 
 		var suggestionDivs = mainSuggestionDiv.selectAll(".suggestion")
@@ -962,7 +960,9 @@
 									if(!d.seen){
 										d.seen = true;
 										d3.select(this).classed("seen",true);
+										$(".newSuggestionsCount").text(suggestionManager.getUnseenSuggestionsCount());
 									}
+									suggestionClickHandler(d);
 								});
 
 		suggestionDivs.append("span")
@@ -974,5 +974,103 @@
 		suggestionDivs.append("hr");
 
 	}
+
+	function drawHorizontalBarsForWeightVector(divId,data,colorMap) {
+		$(divId).html('');
+		var dataMaxVal;
+
+		if(data.length>0){
+			dataMaxVal = -1;
+			for(var i in data){
+				var val = data[i]['weight'];
+				if(dataMaxVal<val){
+					dataMaxVal = val;
+				}
+			}
+		}
+
+		var scale = d3.scale.linear()
+			.domain([0,dataMaxVal])
+			.range([5,80]);
+
+		var row = d3.select(divId)
+			.selectAll("div")
+			.data(data)
+			.enter()
+			.append("div")
+			.attr("class","legendinforow")
+			.style("margin-top","3px")
+			.style("width","250px");
+		
+
+		var infolabelclass = 'legendinfolabel';
+		infolabelclass += ' nocolorbox';
+
+		row.append("div")
+			.attr("class",infolabelclass)
+			.attr("flex","1")
+			.style("margin-left","5px")
+			.text(function(d) { return d.label; });
+
+		row.append("svg")
+			.attr("width",80)
+			.append("rect")
+			.attr("class","legendinfobar")
+			.style("width", function(d) { return scale(d.weight) + "px"; })
+			.style("fill",function (d) {
+				return colorMap[d.label];
+			});
+
+		row.append("div")
+			.attr("class","legendinfovalue")
+			.text(function(d) {
+				return parseFloat(Math.round(d.weight* 10000) / 10000).toFixed(2);
+				// return d.weight
+			});
+
+	}
+
+	function suggestionClickHandler(suggestion) {
+		$("#suggestionListDiv").hide();
+		$("#attributeWeightVectorComparisonDiv").show();
+		var activeVectorDataList = [], colorMap = {};
+		for(var attribute in suggestion.existingValue){
+			activeVectorDataList.push({
+				"label":attribute,
+				"weight":suggestion.existingValue[attribute]
+			});
+			colorMap[attribute] = "steelblue";
+		}
+		drawHorizontalBarsForWeightVector("#activeAttributeWeightVectorDiv",activeVectorDataList,colorMap);
+		
+		activeVectorDataList = [], colorMap = {};
+		for(var attribute in suggestion.suggestedValue){
+			activeVectorDataList.push({
+				"label":attribute,
+				"weight":suggestion.suggestedValue[attribute]
+			});
+			var suggestedWeight = parseFloat(Math.round(suggestion.suggestedValue[attribute]* 10000) / 10000).toFixed(2);
+			var currentWeight = parseFloat(Math.round(suggestion.existingValue[attribute]* 10000) / 10000).toFixed(2);
+			if(suggestedWeight<currentWeight){
+				colorMap[attribute] = "red";
+			}else if(suggestedWeight>currentWeight){
+				colorMap[attribute] = "green";
+			}else {
+				colorMap[attribute] = "steelblue";				
+			}
+		}
+		drawHorizontalBarsForWeightVector("#suggestedAttributeWeightVectorDiv",activeVectorDataList,colorMap);
+
+		$("#applySuggestedAttributeVectorButton").click(function (elm) {
+			ial.setAttributeWeightVector(suggestion.suggestedValue);
+			adjustSliderWeights(suggestion.suggestedValue);
+		});
+	}
+
+	$("#returnToSuggestionsListButton").click(function (elm) {
+		$("#attributeWeightVectorComparisonDiv").hide();
+		$("#suggestionListDiv").show();
+	});
+
 
 })();
