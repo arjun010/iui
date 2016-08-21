@@ -31,7 +31,9 @@
         setTimeout(function () {
             globalVars.dataAttributeMap = dataProcessor.getAttributeMap();
             uiHandler.populateDataAttributeDropdowns(globalVars.dataAttributeMap);
-            uiHandler.showEmptyDetailsTable()
+            visGenie.generateRecommendationMap(globalVars.dataAttributeMap);
+
+            uiHandler.showEmptyDetailsTable();
             graphRenderer.initialize(globalVars.dataObjectList,"#exploreVis")
             graphRenderer.drawGraph();
         },1000)

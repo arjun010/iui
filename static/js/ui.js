@@ -229,6 +229,9 @@
                         newWeightVector[d.label] = parseFloat(d.value)
                     });
                     ial.setAttributeWeightVector(newWeightVector)
+                    if(globalVars.currentView=="VisExplore"){
+                        visExplorer.init();
+                    }
                 })
             );
 
@@ -607,16 +610,22 @@
 		$("#exploreView").hide();
 		$("#provenanceView").hide();
 		$("#dashboardVis").show();
+        $("#mainCanvasBody").css('overflow-y','auto');
+        globalVars.currentView = "VisExplore";
+        visExplorer.init();
 	});
 
 	$("#exploreViewButton").click(function (ev) {
 		$("#provenanceView").hide();
+        $("#mainCanvasBody").css('overflow-y','');
 		$("#dashboardVis").hide();
 		$("#exploreView").show();
+        globalVars.currentView = "DataExplore";
 	});
 
 	$("#provenanceViewButton").click(function (ev) {
-		$("#exploreView").hide();
+        $("#mainCanvasBody").css('overflow-y','');
+        $("#exploreView").hide();
 		$("#dashboardVis").hide();
 		$("#provenanceView").show();
 	});
@@ -1071,6 +1080,11 @@
 		$("#attributeWeightVectorComparisonDiv").hide();
 		$("#suggestionListDiv").show();
 	});
+
+    $('#suggestionsModal').on("hidden.bs.modal", function () {
+        $("#attributeWeightVectorComparisonDiv").hide();
+        $("#suggestionListDiv").show();
+    });
 
 
 })();

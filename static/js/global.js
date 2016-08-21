@@ -32,5 +32,7 @@
     globalVars.specialPointsSelectionThreshold = 5;
     
     globalVars.weightVectorSumDiffChange = 0.4;
+
+	globalVars.currentView = "DataExplore"; //DataExplore, VisExplore
 	
 })();
