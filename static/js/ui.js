@@ -228,7 +228,8 @@
                     d3.selectAll('.infobar').each(function (d) {
                         newWeightVector[d.label] = parseFloat(d.value)
                     });
-                    ial.setAttributeWeightVector(newWeightVector)
+                    ial.setAttributeWeightVector(newWeightVector);
+                    $("#interactionSuggestionText").text(brain.getInteractionSuggestion());
                     if(globalVars.currentView=="VisExplore"){
                         visExplorer.init();
                     }
@@ -249,8 +250,9 @@
 	};
 
 	function adjustSliderWeights(newWeightVector){
-		console.log(newWeightVector)
-		d3.selectAll('.infobar')
+		//console.log(newWeightVector)
+
+        d3.selectAll('.infobar')
 			.transition().duration(500)
 			.attr('width', function (d) {
 				d.value = newWeightVector[d.label];
@@ -263,6 +265,8 @@
 			.text(function(d) {
 				return parseFloat(Math.round(d.value * 10000) / 10000).toFixed(2);
 			});
+
+        $("#interactionSuggestionText").text(brain.getInteractionSuggestion());
 	}
 
 	$("#applyAttributeWeightsButton").click(function(){
@@ -612,7 +616,9 @@
 		$("#dashboardVis").show();
         $("#mainCanvasBody").css('overflow-y','auto');
         globalVars.currentView = "VisExplore";
-        visExplorer.init();
+        if(globalVars.likedPoints.length>0){
+            visExplorer.init();
+        }
 	});
 
 	$("#exploreViewButton").click(function (ev) {
@@ -735,6 +741,8 @@
         $('#clusterDetailsModal').modal('show');
         $(".curClusterText").html(d.label);
         $(".curClusterPointCount").html(d.points.length);
+
+        //d3.select("#clusterAttributeLevelSummaryReason").append('title').text(function(){return "Hello World";});
 
         drawAttributeSummaryChartsForCluster(d.points);
 
@@ -1084,6 +1092,78 @@
     $('#suggestionsModal').on("hidden.bs.modal", function () {
         $("#attributeWeightVectorComparisonDiv").hide();
         $("#suggestionListDiv").show();
+    });
+
+    $("#whatNextIcon").click(function(elm){
+        $("#whatNextModal").modal('show');
+        $("#whatsNextSuggestions").html('');
+
+        if($("#groupDropdown").val()==''){
+            for(var attribute in globalVars.dataAttributeMap){
+                if(globalVars.dataAttributeMap[attribute]['isCategorical']=='1'){
+                    if(globalVars.dataAttributeMap[attribute]['domain'].length<=12){
+                        if($("#sizeDropdown").val()!=attribute && $("#colorDropdown").val()!=attribute){
+                            $("#whatsNextSuggestions").append("<p>Try <b>grouping</b> data points by the <b>" + attribute + "</b> attribute.")
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if($("#colorDropdown").val()==''){
+            for(var attribute in globalVars.dataAttributeMap){
+                if(globalVars.dataAttributeMap[attribute]['isCategorical']=='1'){
+                    if(globalVars.dataAttributeMap[attribute]['domain'].length<=6){
+                        if($("#sizeDropdown").val()!=attribute && $("#groupDropdown").val()!=attribute){
+                            $("#whatsNextSuggestions").append("<p>Try <b>coloring</b> data points by the <b>" + attribute + "</b> attribute.")
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        ial.getAttributeVariance('Retail Price')
+        ial.getAttributeVariance('Width')
+        if($("#sizeDropdown").val()==''){
+            var maxVarianceAttribute = undefined, maxVariance = undefined;
+            for(var attribute in globalVars.dataAttributeMap){
+                if(globalVars.dataAttributeMap[attribute]['isNumeric']=='1'){
+                    if($("#colorDropdown").val()!=attribute && $("#groupDropdown").val()!=attribute){
+                        var curAttributeVariance = ial.getAttributeVariance(attribute);
+                        if(maxVariance==undefined){
+                            maxVariance = curAttributeVariance;
+                            maxVarianceAttribute = attribute;
+                        }else{
+                            if(maxVariance<curAttributeVariance){
+                                maxVariance = curAttributeVariance;
+                                maxVarianceAttribute = attribute;
+                            }
+                        }
+                    }
+                }
+            }
+            $("#whatsNextSuggestions").append("<p>Try <b>sizing</b> data points by the <b>" + maxVarianceAttribute + "</b> attribute.")
+        }
+
+        var curAttributeVector = ial.getAttributeWeightVector();
+        var maxScore = undefined, maxScoreDataPoint = undefined;
+        for(var d of globalVars.dataObjectList){
+            if(utils.objectInList(d,globalVars.dislikedPoints)==false && utils.objectInList(d,globalVars.likedPoints)==false && utils.objectInList(d,globalVars.selectedPoints)==false){
+                if(maxScore == undefined){
+                    maxScore = d.ial.itemScore;
+                    maxScoreDataPoint = d;
+                }else{
+                    if(maxScore< d.ial.itemScore){
+                        maxScore = d.ial.itemScore;
+                        maxScoreDataPoint = d;
+                    }
+                }
+            }
+        }
+
+        $("#whatsNextSuggestions").append("<p>You might be interested in the data point <b>" + maxScoreDataPoint.Name + "</b>.")
+
     });
 
 

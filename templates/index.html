@@ -54,7 +54,8 @@
         <span style="font-size:20px;margin-left:15px;">Project Title</span>
 
         <!--<button type="button" class="btn btn-danger" style="height: 50%;"> -->
-            <span style="float: right;margin-top: 5px;margin-right: 5px;background-color: #e31b00;cursor: pointer;" class="badge newSuggestionsCount" id="suggestsionsBadge">0</span>
+        <span style="float: right;margin-top: 5px;margin-right: 5px;background-color: #e31b00;cursor: pointer;" class="badge newSuggestionsCount" id="suggestsionsBadge">0</span>
+        <span style="float: right;margin-top: 5px;margin-right: 5px;cursor: pointer;font-size: 18px;" class="fa fa-question-circle" id="whatNextIcon"></span>
         <!--</button>-->
     </div>
     <div id='mainbody'>
@@ -83,6 +84,7 @@
                             <button id="groupByClusters">Re-group</button>
                             <button id="colorByClusters">Re-color</button>
                             <button id="printWeightVectorButton">Print weight vector (DEV ONLY)</button>
+                            <p id="interactionSuggestionText" style="color: blue;"></p>
                         </div>
                         <hr>
                         <span style="float: right;">
@@ -166,7 +168,7 @@
                     </div>
                 </div>
                 <div id="dashboardVis">
-                    <p>ATTRIBUTE BASED VISUALIZATIONS</p>
+                    <p>Like one or more data points to visualize them across different attribute combinations.</p>
                 </div>
                 <div id="provenanceView">
                     <p>PROVENANCE</p>
@@ -198,7 +200,8 @@
                     <h4 class="modal-title" style="font-weight:normal">Details about cluster <b><span class="curClusterText"></span></b></h4>
                 </div>
                 <div class="modal-body">
-                    <div>Number of points: <b><span class="curClusterPointCount"></span></b> <button id="selectAllPointsInCluster">Select</button><button id="likeAllPointsInCluster">Like</button><button id="dislikeAllPointsInCluster">Dislike</button></div>
+                    <div>Number of points: <b><span class="curClusterPointCount"></span></b> <button id="selectAllPointsInCluster"><span class="fa fa-circle"></span></button><button id="likeAllPointsInCluster"><span class="fa fa-thumbs-up"></span></button><button id="dislikeAllPointsInCluster"><span class="fa fa-thumbs-down"></span></button></div>
+                    <h4>Attribute level summaries for cluster:<span class="fa fa-question" id="clusterAttributeLevelSummaryReason" data-toggle='tooltip' title="Shown because the weights you set indicate you are interested in these attributes." style="float: right;"></span></h4>
                     <div id="curClusterChartsContainer"></div>
                     <!--<div class="container-fluid container-cards-pf">-->
                         <!--<div class="row row-cards-pf" id="curClusterCharts">-->
@@ -226,6 +229,22 @@
                         <button id="applySuggestedAttributeVectorButton"><span class="fa fa-thumbs-up"></span></button>
                         <button id="returnToSuggestionsListButton">Back</button>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="whatNextModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="font-weight:normal">Need help?</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="whatsNextSuggestions"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

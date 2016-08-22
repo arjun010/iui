@@ -183,6 +183,11 @@
         }
     };
 
+    ial.getAttributeVariance = function(attribute){
+        //console.log(this.attributeValueMap[attribute]['variance']);
+        return this.attributeValueMap[attribute]['variance'];
+    }
+
 // set the given list of attributes to categorical
     ial.setCategorical = function(attributeList) {
         for (var j = 0; j < attributeList.length; j++) {

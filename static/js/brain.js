@@ -68,5 +68,17 @@
         score = parseFloat(Math.round(score* 10000) / 10000).toFixed(4);
         return score;
     }
+
+    brain.getInteractionSuggestion = function () {
+        var attributeVector = ial.getAttributeWeightVector();
+        var ialClusters = ial.createClusters();
+        if(ialClusters.length<=6){
+            return "Group, Color"
+        }else if(ialClusters.length>6 && ialClusters.length<=12){
+            return "Group"
+        }else{
+            return "Size"
+        }
+    };
     
 })();

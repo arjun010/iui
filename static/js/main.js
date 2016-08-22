@@ -58,6 +58,7 @@
         main.initializeData(dataFile);
         setTimeout(function () {
             uiHandler.populateDataAttributeContainer();
+            $("#interactionSuggestionText").text(brain.getInteractionSuggestion());
         },1001);
     }
     
