@@ -17,8 +17,8 @@
         this.visObject = visObject;
     };
 
-    VisCard.prototype.bookmark = function () {
-        this.bookmarked = true;
+    VisCard.prototype.bookmark = function (value) {
+        this.bookmarked = value;
     };
 
     VisCard.prototype.setScore = function (score) {

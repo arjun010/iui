@@ -34,5 +34,8 @@
     globalVars.weightVectorSumDiffChange = 0.4;
 
 	globalVars.currentView = "DataExplore"; //DataExplore, VisExplore
-	
+	globalVars.cardMap = {};
+
+	globalVars.insights = [];
+
 })();

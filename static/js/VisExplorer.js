@@ -78,6 +78,7 @@
         for(var visCard of threeAttributeCards){
             addCard(visCard);
         }
+        uiHandler.bindCardBookmarkEvents();
     }
 
     var curChartTypes = ["Bar","Histogram","Scatterplot"];
@@ -88,7 +89,8 @@
         var chartCardId = "visExplorerCard" + this.cardNumber;
         this.cardNumber += 1;
         chartCardId = chartCardId.replace(/ /g,"");
-        var chartCardHTML = "<div class='visExplorerCard' id='"+chartCardId+"'><span class='fa fa-bookmark' style='float: right;'></span></div>";
+        globalVars.cardMap[chartCardId] = visCard;
+        var chartCardHTML = "<div class='visExplorerCard' id='"+chartCardId+"'><span class='fa fa-bookmark cardBookmark' style='float: right;'></span></div>";
         $("#dashboardVis").append(chartCardHTML);
         visRenderer.renderChart(globalVars.likedPoints, cardVisObject, "#" + chartCardId);
     }

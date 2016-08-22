@@ -55,6 +55,7 @@
 
         <!--<button type="button" class="btn btn-danger" style="height: 50%;"> -->
         <span style="float: right;margin-top: 5px;margin-right: 5px;background-color: #e31b00;cursor: pointer;" class="badge newSuggestionsCount" id="suggestsionsBadge">0</span>
+        <span style="float: right;margin-top: 5px;margin-right: 5px;cursor: pointer;font-size: 18px;" class="fa fa-sticky-note-o" id="allInsightsIcon"></span>
         <span style="float: right;margin-top: 5px;margin-right: 5px;cursor: pointer;font-size: 18px;" class="fa fa-question-circle" id="whatNextIcon"></span>
         <!--</button>-->
     </div>
@@ -252,6 +253,42 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="addInsightModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="font-weight:normal">Add insight</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="addInsightDiv">
+                        <div id="addInsightVis"></div>
+                        <textarea class="form-control" rows="3" id="insightNotes"></textarea>
+                        <button class="btn btn-success" id="saveInsight">Save</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="allInsightsModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="font-weight:normal">Your Insights</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="allInsightsDiv"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--
     <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="">
         <div class="modal-dialog modal-lg">
@@ -273,7 +310,9 @@
 </body>
 <script src="../static/js/global.js"></script>
 <script src="../static/js/suggestions.js"></script>
+<script src="../static/js/InsightManager.js"></script>
 <script src="../static/js/VisCard.js"></script>
+<script src="../static/js/Insight.js"></script>
 <script src="../static/js/brain.js"></script>
 <script src="../static/js/utils.js"></script>
 <script src="../static/js/contextMenu.js"></script>

@@ -199,6 +199,16 @@
 			}
 		}
 		return combs;
-	}
+	};
+
+	utils.removeFromInsightsList = function (timestampToRemove) {
+		for(var i in globalVars.insights){
+			var insight = globalVars.insights[i];
+			if(timestampToRemove==insight.timeStamp){
+				globalVars.insights.splice(i, 1);
+				break;
+			}
+		}
+	};
 
 })();

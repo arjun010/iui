@@ -146,8 +146,8 @@
         return transformedList;
     };
 
-    dataTransformer.getDataForHistogram = function (dataList, attribute) {
-
+    dataTransformer.getDataForHistogram = function (dataList, visObject) {
+        var attribute = visObject.xAttr;
         var transformedList = [];
         for(var dataObj of dataList){
             transformedList.push(parseFloat(dataObj[attribute]));

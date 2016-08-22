@@ -11,7 +11,7 @@
                     "xAttr" : visObject.xAttr,
                     "yAttr" : ""
                 };
-                drawHistogram(data,visObject.xAttr,labels,selector);
+                drawHistogram(data,visObject,labels,selector);
                 break;
             case "Bar":
                 if(visObject.xAttr!="" && visObject.yAttr!=""){
@@ -51,33 +51,68 @@
         }
     };
 
-    var drawHistogram = function (data,attribute,labels,selector) {
-        var histogramData = dataTransformer.getDataForHistogram(data,attribute);
+    visRenderer.renderVisObject = function (visObject,selector) {
+        switch (visObject.chartType){
+            case "Histogram":
+                var labels = {
+                    "xAttr" : visObject.xAttr,
+                    "yAttr" : ""
+                };
+                renderHistogram(visObject.data,labels,selector);
+                break;
+            case "Bar":
+                if(visObject.xAttr!="" && visObject.yAttr!=""){
+                    var labels = {
+                        "xAttr" : visObject.xAttr,
+                        "yAttr" : visObject.yAttr
+                    };
+                    if(visObject.yTransform!=""){
+                        labels.yAttr = visObject.yTransform + "(" + labels.yAttr + ")";
+                    }
+
+                    renderVerticalBarChart(visObject.data,visObject,labels,selector);
+                }
+                break;
+            case "Scatterplot":
+                if(visObject.xAttr!="" && visObject.yAttr!=""){
+                    var labels = {
+                        "xAttr" : visObject.xAttr,
+                        "yAttr" : visObject.yAttr
+                    };
+                    if(visObject.xTransform!=""){
+                        labels.xAttr = visObject.xTransform + "(" + labels.xAttr + ")";
+                    }
+                    if(visObject.yTransform!=""){
+                        labels.yAttr = visObject.yTransform + "(" + labels.yAttr + ")";
+                    }
+                    renderScatterplot(visObject.data,visObject,labels,selector);
+                }
+                break;
+            default:
+                break;
+        }
+    };
+
+    var drawHistogram = function (data,visObject,labels,selector) {
+        var histogramData = dataTransformer.getDataForHistogram(data,visObject);
+        visObject.setData(histogramData);
         renderHistogram(histogramData,labels,selector);
     };
 
-    /*
-     var drawTwoAttriubteBarChart = function (data,xAttribute,yAttribute,transform,labels,selector) {
-     var barChartData = dataTransformer.getDataForTwoAttributeBarChart(data,xAttribute,yAttribute,transform);
-     console.log(barChartData)
-     renderVerticalBarChart(barChartData,labels,selector);
-     };
-     */
     var generateBarChart = function(dataList,visObject,labels,selector){
         var barChartData = dataTransformer.getDataForBarChart(dataList,visObject);
+        visObject.setData(barChartData);
         renderVerticalBarChart(barChartData,visObject,labels,selector);
     };
-
 
     var generateScatterplot = function(dataList,visObject,tooltipLabelAttribute,labels,selector){
         if(tooltipLabelAttribute==undefined || tooltipLabelAttribute==''){
             tooltipLabelAttribute = 'Name';
         }
-        // console.log(tooltipLabelAttribute)
         var scatterplotData = dataTransformer.getDataForScatterplot(dataList,visObject,tooltipLabelAttribute);
+        visObject.setData(scatterplotData);
         renderScatterplot(scatterplotData,visObject,labels,selector);
     };
-
 
     var histogramTooltip = d3.tip().attr('class', 'd3-tip').html(function(d) {
         return d.y;

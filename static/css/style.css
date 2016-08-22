@@ -248,11 +248,11 @@ select{
 }
 
 .visExplorerCard{
-    width: 385px;
+    width: 400px;
     height: 300px;
     background-color: white;
     float: left;
-    margin: 30px;
+    margin: 10px;
     overflow: auto;
 }
 
@@ -284,4 +284,18 @@ select{
 #dashboardVis {
     overflow-y: auto;
     background-color: #CCCCCC;
+}
+
+.cardBookmark.bookmarked{
+    color: green;
+}
+
+#addInsightVis{
+    width: 600px;
+    height: 400px;
+}
+
+.insightVisThumbnail{
+    width: 225px;
+    height: 225px;
 }

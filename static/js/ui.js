@@ -836,13 +836,18 @@
                 }
 
                 var chartCardId = "clusterModalChartCard-" + attribute;
-                chartCardId = chartCardId.replace(/ /g,"")
-                var chartCardHTML = "<div class='clusterModalChartCard' id='"+chartCardId+"'></div>";
+                chartCardId = chartCardId.replace(/ /g,"");
+                var visCardObj = new VisCard();
+                visCardObj.setAttributes(attribute);
+                visCardObj.setVisObject(chartObj);
+                globalVars.cardMap[chartCardId] = visCardObj;
+                var chartCardHTML = "<div class='clusterModalChartCard' id='"+chartCardId+"'><span class='fa fa-bookmark cardBookmark' style='float: right;'></span></div>";
                 $("#curClusterChartsContainer").append(chartCardHTML);
                 // console.log(chartObj)
                 visRenderer.renderChart(clusterPoints,chartObj,"#"+chartCardId);
             }
         }
+        uiHandler.bindCardBookmarkEvents();
     }
 
     $('#clusterDetailsModal').on('hidden.bs.modal', function () {
@@ -1166,5 +1171,59 @@
 
     });
 
+    uiHandler.bindCardBookmarkEvents = function () {
+        $(".cardBookmark").click(function (evt) {
+            //console.log(evt.target.parentElement.id);
+            var cardId = evt.target.parentElement.id;
+            var visCard = globalVars.cardMap[cardId];
+            if(!d3.select(this).classed("bookmarked")){
+                d3.select(this).classed("bookmarked",true);
+                visCard.bookmark(true);
+                showAddInsightModal(visCard);
+            }else{
+                d3.select(this).classed("bookmarked",false);
+                visCard.bookmark(false);
+            }
+            //console.log(globalVars.cardMap[cardId]);
+        });
+    };
+
+    var showAddInsightModal = function (visCard) {
+        $("#addInsightModal").modal("show");
+        $("#insightNotes").val('');
+        $("#addInsightVis").html('');
+        visRenderer.renderVisObject(visCard.visObject,"#addInsightVis")
+
+        $("#saveInsight").click(function(evt){
+            var insight = new Insight();
+            insight.setVisObject(visCard.visObject);
+            insight.setNotes($("#insightNotes").val());
+            InsightManager.addInsight(insight);
+            $("#saveInsight").unbind().click(function() {
+                //Stuff
+            });
+            $("#addInsightModal").modal('hide');
+        });
+
+    };
+
+    $("#allInsightsIcon").click(function(evt){
+        $("#allInsightsModal").modal('show');
+        $("#allInsightsDiv").html('');
+        for(var index in globalVars.insights){
+            var insight = globalVars.insights[index];
+            var insightRowHTML = "<div style='height: 250px;'>";
+            insightRowHTML += "<div style='float: right;font-size:10px;'>"+insight.timeStamp+"</div>";
+            var rowTwo = "<br><div>";
+            var insightVisThumbnailId = "insight"+index+"VisThumbnail";
+            rowTwo += "<span style='float: left'><b>Notes:</b><br>"+insight.notes+"</span>";
+            rowTwo += "<div style='float: right;margin-right:2px;' class='insightVisThumbnail' id='"+insightVisThumbnailId+"'></div>";
+            rowTwo += "</div>";
+            insightRowHTML += rowTwo;
+            insightRowHTML += "</div><hr>";
+            $("#allInsightsDiv").append(insightRowHTML);
+            visRenderer.renderVisObject(insight.visObject,"#"+insightVisThumbnailId);
+        }
+    });
 
 })();
