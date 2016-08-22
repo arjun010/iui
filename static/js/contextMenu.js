@@ -111,7 +111,9 @@
         applyEventHandlersToSpecialPoints();
         applyEventHandlerToCancelSpecialPoint();
 
-    }
+        $(".likedPointsCount").text(globalVars.likedPoints.length);
+        $(".specialPointsCount").text(globalVars.dislikedPoints.length + globalVars.likedPoints.length);
+    };
 
     addPointToDislikedList = function (d,elm) {
         if(utils.objectInList(d,globalVars.dislikedPoints)==false && utils.objectInList(d,globalVars.likedPoints)==false){
@@ -126,7 +128,11 @@
         
         applyEventHandlersToSpecialPoints();
         applyEventHandlerToCancelSpecialPoint();
-    }
+
+        $(".dislikedPointsCount").text(globalVars.dislikedPoints.length);
+        $(".specialPointsCount").text(globalVars.dislikedPoints.length + globalVars.likedPoints.length);
+
+    };
 
     function applyEventHandlersToSpecialPoints() {
         $(".specialPoint").mouseover(function (elm) {

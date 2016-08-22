@@ -165,14 +165,21 @@
                     value = value.replace(/'/g,"").replace(/"/g,"")
                     tooltipStr += "<strong>Type: </strong>" + "Categorical" + "<br>";
 					tooltipStr += "<strong>Domain: </strong>" + value + "<br>";
-				}else if(globalVars.dataAttributeMap[attribute]['isNumeric']=='1'){
+				}else if(globalVars.dataAttributeMap[attribute]['isNumeric']=='1' && globalVars.dataAttributeMap[attribute]['isCategorical']=='0'){
 					var minVal = Math.min.apply(Math, globalVars.dataAttributeMap[attribute]['domain']);
 					var maxVal = Math.max.apply(Math, globalVars.dataAttributeMap[attribute]['domain']);
 					var value = minVal + "-" + maxVal;
 
 					tooltipStr += "<strong>Type: </strong>" + "Numeric" + "<br>";
 					tooltipStr += "<strong>Domain: </strong>" + value + "<br>";
-				}
+				}else if(globalVars.dataAttributeMap[attribute]['isNumeric']=='1' && globalVars.dataAttributeMap[attribute]['isCategorical']=='1'){
+                    var minVal = Math.min.apply(Math, globalVars.dataAttributeMap[attribute]['domain']);
+                    var maxVal = Math.max.apply(Math, globalVars.dataAttributeMap[attribute]['domain']);
+                    var value = minVal + "-" + maxVal;
+
+                    tooltipStr += "<strong>Type: </strong>" + "Numeric, Categorical" + "<br>";
+                    tooltipStr += "<strong>Domain: </strong>" + value + "<br>";
+                }
 
 				tooltipStr += "</div>";
 				return "<i data-toggle='tooltip' data-html='true' title='"+tooltipStr+"' class='fa fa-info-circle' aria-hidden='true' style='font-size:10px'></i> " + d.label;
