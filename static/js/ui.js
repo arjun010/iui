@@ -1233,4 +1233,63 @@
         }
     });
 
+    $("#searchAttribute").change(function(evt){
+        var searchAttribute = $("#searchAttribute").val();
+        var availableValuesForAttribute = [];
+        if(searchAttribute!=''){
+            for(var dataObject of globalVars.dataObjectList){
+                var val = dataObject[searchAttribute];
+                if(availableValuesForAttribute.indexOf(val)==-1){
+                    availableValuesForAttribute.push(val);
+                }
+            }
+        }
+
+        $( "#searchBox" ).autocomplete({
+            source: availableValuesForAttribute,
+            focus: function(event, ui){
+                d3.selectAll(".node").classed("highlightedNode",false).classed("fadedNode",false);
+                var searchValue = ui.item.value;
+                $('#searchBox').val(searchValue);
+                triggerSearchInViz(searchValue,searchAttribute)
+            }
+        });
+
+        $("#searchBox").keyup(function (e) {
+            var searchValue = document.getElementById("searchBox").value;
+            triggerSearchInViz(searchValue,searchAttribute);
+        });
+    });
+
+
+    var triggerSearchInViz = function(searchValue,searchAttribute) {
+        if(searchValue==""){
+            d3.selectAll(".node").classed("highlightedNode",false).classed("fadedNode",false);
+        }else{
+            d3.selectAll('.node').each(function (d) {
+                if(d[searchAttribute]==searchValue){
+                    if(!d3.select(this).classed("highlightedNode")){
+                        d3.select(this).classed("highlightedNode",true)
+                    }
+                } else{
+                    if(!d3.select(this).classed("fadedNode")){
+                        d3.select(this).classed("fadedNode",true)
+                    }
+                }
+            });
+        }
+    };
+
+    uiHandler.bindVisCardQuestionMarkEvents = function () {
+        //visCardQuestionMark
+        //$(".visCardQuestionMark")
+        d3.selectAll(".visCardQuestionMark").each(function (d) {
+            var cardId = d3.select(this.parentNode).attr('id');
+            var visCard = globalVars.cardMap[cardId];
+            d3.select(this).attr('title', function () {
+                return "Shown based on your interest in attribute(s): " + visCard.attributes.join(', ');
+            })
+        })
+    };
+
 })();
